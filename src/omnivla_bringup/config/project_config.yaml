@@ -1,0 +1,10 @@
+# Global project-level settings.
+# Intended contents:
+# - use_sim_time
+# - default world name
+# - default map path
+# - topic names shared across packages
+# - base frame / odom frame / map frame
+project:
+  name: omnivla_nav_gazebo
+  use_sim_time: true

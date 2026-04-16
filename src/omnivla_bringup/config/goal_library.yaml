@@ -1,0 +1,13 @@
+# Semantic goal library.
+# Intended contents:
+# - goal ID
+# - human-readable label
+# - target pose for Nav2
+# - optional goal image path
+# - optional aliases / prompt templates
+# Example:
+goals:
+  - id: desk_left
+    label: "left desk"
+    pose: [0.0, 0.0, 0.0]
+    goal_image: ""

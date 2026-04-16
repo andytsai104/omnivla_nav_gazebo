@@ -1,0 +1,9 @@
+# Data collection settings.
+# Intended contents:
+# - save root
+# - image save rate
+# - randomized start / goal behavior
+# - number of episodes
+collection:
+  output_dir: data/raw
+  max_episodes: 100

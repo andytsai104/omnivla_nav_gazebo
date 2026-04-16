@@ -1,0 +1,10 @@
+# Runtime settings.
+# Intended contents:
+# - subscribed image / pose / prompt topics
+# - model checkpoint path
+# - inference rate
+# - confidence threshold
+runtime:
+  image_topic: /camera/image_raw
+  pose_topic: /odom
+  prompt_topic: /nav_prompt

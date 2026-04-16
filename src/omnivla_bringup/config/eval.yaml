@@ -1,0 +1,9 @@
+# Evaluation settings.
+# Intended contents:
+# - success distance threshold
+# - yaw threshold
+# - timeout per episode
+# - number of trials
+eval:
+  success_distance_m: 0.5
+  timeout_sec: 120.0

@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-package_name = 'omnivla_data'
+package_name = 'omnivla_bringup'
 
 setup(
     name=package_name,

@@ -79,17 +79,20 @@ omnivla_bringup/
   config/goal_library.yaml
 
 omnivla_core/
-  inference_node.py
-  nav2_goal_bridge_node.py
-  goal_library.py
+  omnivla_core/
+    inference_node.py
+    nav2_goal_bridge_node.py
+    goal_library.py
 
 omnivla_data/
-  data_logger_node.py
-  episode_manager_node.py
+  omnivla_data/
+    data_logger_node.py
+    episode_manager_node.py
 
 omnivla_eval/
-  eval_runner_node.py
-  metrics.py
+  omnivla_eval/
+    eval_runner_node.py
+    metrics.py
 ```
 
 ---
