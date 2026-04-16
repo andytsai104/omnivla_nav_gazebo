@@ -1,43 +1,166 @@
-# OmniVLA Docker Starter
+# OmniVLA Navigation (ROS 2 + Gazebo)
 
-## Build the image
-```bash
-docker build -t omnivla:jazzy-harmonic .
+Hybrid language-guided navigation project using:
+- ROS 2 Jazzy
+- Gazebo Harmonic + BCR Bot
+- Nav2 (execution)
+- OmniVLA-edge (semantic goal inference)
+
+---
+
+## Repo Structure
+
+```
+omnivla_ws/
+├── OmniVLA/                 # model + training (outside ROS)
+│   ├── checkpoints/
+│   ├── datasets/
+│   ├── scripts/
+│   └── training/
+├── src/
+│   ├── bcr_bot/             # third-party robot
+│   ├── omnivla_bringup/     # launch + configs
+│   ├── omnivla_core/        # runtime (inference + nav2 bridge)
+│   ├── omnivla_data/        # data collection
+│   └── omnivla_eval/        # evaluation
+└── README.md
 ```
 
-## Run the container
-```bash
-./run_omnivla_container.sh ~/ros2_projects/omnivla_ws
-```
+---
 
-If your workspace was previously built on the host, rebuild inside the container:
-```bash
-cd /omnivla_ws
-rm -rf build install log
-source /opt/ros/jazzy/setup.bash
-rosdep update
-rosdep install --from-paths src --ignore-src -r -y
+## Build
+
+```
+cd ~/ros2_projects/omnivla_ws
 colcon build --symlink-install
 source install/setup.bash
 ```
 
-## Quick verification inside the container
-```bash
-printenv ROS_DISTRO
-gz sim --versions
-dpkg -l | grep -E 'ros-jazzy-ros-gz|gz-sim'
-which ros2
-which colcon
-nvidia-smi
+Clean rebuild if needed:
+
+```
+rm -rf build install log
+colcon build --symlink-install
+source install/setup.bash
 ```
 
-Expected:
-- `ROS_DISTRO=jazzy`
-- `gz-sim8` for Harmonic
-- `ros2`, `colcon`, and `gz` commands available
-- `nvidia-smi` works when the host NVIDIA runtime is configured
+---
 
-## Notes
-- GPU support depends on the host having NVIDIA drivers and NVIDIA Container Toolkit configured.
-- GUI support depends on X11 forwarding from the host.
-- Docker Desktop on Linux can run GPU-enabled containers, but the host still needs NVIDIA Container Toolkit / driver support.
+## Package Responsibilities
+
+### omnivla_bringup
+- all launch files
+- all yaml configs
+- orchestrate modes (sim / data / inference / eval)
+
+### omnivla_core
+- inference node (OmniVLA)
+- goal resolver
+- Nav2 goal bridge
+
+### omnivla_data
+- data logger
+- episode reset / sampling
+- dataset export helpers
+
+### omnivla_eval
+- evaluation runner
+- metrics (success, time, collision)
+- result logging
+
+---
+
+## Minimal Files to Start
+
+```
+omnivla_bringup/
+  launch/sim.launch.py
+  launch/data_collection.launch.py
+  config/goal_library.yaml
+
+omnivla_core/
+  inference_node.py
+  nav2_goal_bridge_node.py
+  goal_library.py
+
+omnivla_data/
+  data_logger_node.py
+  episode_manager_node.py
+
+omnivla_eval/
+  eval_runner_node.py
+  metrics.py
+```
+
+---
+
+## Dev Flow
+
+```
+1. bring up sim + nav2 (bcr_bot)
+2. define goal_library.yaml
+3. collect data (omnivla_data)
+4. export dataset → OmniVLA/
+5. finetune model
+6. run inference (omnivla_core)
+7. send goal → Nav2
+8. run evaluation (omnivla_eval)
+```
+
+---
+
+## PROGRESS TRACKER
+
+
+### omnivla_bringup
+- [ ] launch/sim.launch.py
+- [ ] launch/data_collection.launch.py
+- [ ] launch/inference_nav.launch.py
+- [ ] launch/evaluation.launch.py
+- [ ] config/goal_library.yaml
+- [ ] config/runtime.yaml
+- [ ] config/collection.yaml
+- [ ] config/eval.yaml
+
+### omnivla_core
+- [ ] inference_node.py
+- [ ] nav2_goal_bridge_node.py
+- [ ] goal_library.py
+- [ ] model_client.py
+- [ ] image_utils.py
+- [ ] pose_utils.py
+
+### omnivla_data
+- [ ] data_logger_node.py
+- [ ] episode_manager_node.py
+- [ ] prompt_sampler.py
+- [ ] goal_sampler.py
+- [ ] sync_utils.py
+- [ ] export_utils.py
+
+### omnivla_eval
+- [ ] eval_runner_node.py
+- [ ] metrics.py
+- [ ] collision_monitor.py
+- [ ] success_checker.py
+- [ ] result_logger.py
+
+### OmniVLA (model side)
+- [ ] dataset export script
+- [ ] dataset loader
+- [ ] goal classifier training
+- [ ] LoRA setup
+- [ ] checkpoint saving
+- [ ] offline validation
+
+---
+## CURRENT MILESTONE
+
+- [ ] Nav2 baseline working (manual goal → robot moves)
+- [ ] goal_library.yaml defined (5–10 goals)
+- [ ] data logger saving valid samples
+- [ ] first dataset exported
+- [ ] first model trained (goal classification)
+- [ ] inference node outputs correct goal ID
+- [ ] Nav2 bridge works with model output
+- [ ] evaluation script runs end-to-end
