@@ -205,10 +205,10 @@ mengjuyu@asu.edu
 https://github.com/roy0823  
 <br>
 
-- **Kalyani Kasar**
-M.S. Robotics & Autonomous Systems @ ASU 
-kkasar@asu.edu
-https://github.com/kalyaniKasar1
+- **Kalyani Kasar**  
+M.S. Robotics & Autonomous Systems @ ASU  
+kkasar@asu.edu  
+https://github.com/kalyaniKasar1  
 
 ---
 
