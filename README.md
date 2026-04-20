@@ -193,16 +193,16 @@ andystsai1040@gmail.com
 https://github.com/andytsai104  
 <br>
 
-- **Alan Cheng**
-M.S. Robotics & Autonomous Systems @ ASU 
-hcheng57@asu.edu
-https://github.com/Ott3rAlan9Ol2S
+- **Alan Cheng**  
+M.S. Robotics & Autonomous Systems @ ASU  
+hcheng57@asu.edu  
+https://github.com/Ott3rAlan9Ol2S  
 <br>
 
-- **Roy Yu**
-M.S. Robotics & Autonomous Systems @ ASU 
-mengjuyu@asu.edu
-https://github.com/roy0823
+- **Roy Yu**  
+M.S. Robotics & Autonomous Systems @ ASU  
+mengjuyu@asu.edu  
+https://github.com/roy0823  
 
 
 ---
