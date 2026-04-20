@@ -6,7 +6,6 @@ Intended purpose:
 - send the goal to Nav2 for execution
 """
 
-#!/usr/bin/env python3
 from __future__ import annotations
 
 import rclpy

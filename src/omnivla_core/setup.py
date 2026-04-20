@@ -1,4 +1,5 @@
 from setuptools import find_packages, setup
+import os
 
 package_name = 'omnivla_core'
 
@@ -27,5 +28,13 @@ setup(
         "inference_node = omnivla_core.inference_node:main",
         "nav2_goal_bridge_node = omnivla_core.nav2_goal_bridge_node:main",
         ],
+    },
+    options={
+        'build_scripts': {
+            'executable': os.environ.get(
+                'PYTHON_FOR_ROS_NODES',
+                '/usr/bin/python3'
+            )
+        }
     },
 )

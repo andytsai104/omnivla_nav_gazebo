@@ -1,14 +1,3 @@
-"""Runtime inference node.
-
-Intended purpose:
-- subscribe to current RGB image / pose / prompt
-- preprocess inputs for OmniVLA / OmniVLA-edge
-- run inference
-- output either:
-  1) semantic goal ID, or
-  2) target pose
-"""
-
 #!/usr/bin/env python3
 from __future__ import annotations
 
@@ -19,20 +8,32 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Image
 from std_msgs.msg import String
 
-from .goal_library import GoalLibrary
-from .image_utils import preprocess_image, ros_image_to_bgr
-from .model_client import ModelClient
-from .pose_utils import odom_to_xyyaw
+from goal_library import GoalLibrary
+from image_utils import preprocess_image, ros_image_to_bgr
+from model_client import ModelClient
+from pose_utils import odom_to_xyyaw
 
 
 class InferenceNode(Node):
     def __init__(self):
         super().__init__("inference_node")
 
+        # ------------------------------------------------------------------
+        # Parameters
+        # ------------------------------------------------------------------
         self.declare_parameter("model_type", "omnivla_edge")
-        self.declare_parameter("mode", "goal_id")
+        self.declare_parameter("mode", "pipeline_check")   # pipeline_check | prediction
         self.declare_parameter("device", "cuda")
-        self.declare_parameter("checkpoint_path", "checkpoints/latest.pt")
+
+        self.declare_parameter(
+            "base_model_checkpoint_path",
+            "omnivla-edge/omnivla-edge.pth"
+        )
+        self.declare_parameter(
+            "classifier_checkpoint_path",
+            "omnivla_finetune/checkpoints/omnivla_edge_goal_classifier.pt"
+        )
+
         self.declare_parameter("inference_rate_hz", 2.0)
         self.declare_parameter("confidence_threshold", 0.50)
 
@@ -40,12 +41,18 @@ class InferenceNode(Node):
         self.declare_parameter("odom_topic", "/bcr_bot/odom")
         self.declare_parameter("prompt_topic", "/omnivla/prompt")
         self.declare_parameter("output_goal_id_topic", "/omnivla/inferred_goal_id")
-        self.declare_parameter("goal_library_path", "config/goal_library.yaml")
+        self.declare_parameter("goal_library_path", "./src/omnivla_bringup/config/goal_library.yaml")
 
-        self.mode = self.get_parameter("mode").get_parameter_value().string_value
-        self.confidence_threshold = (
-            self.get_parameter("confidence_threshold").get_parameter_value().double_value
-        )
+        # ------------------------------------------------------------------
+        # Read parameters
+        # ------------------------------------------------------------------
+        self.model_type = self.get_parameter("model_type").value
+        self.mode = self.get_parameter("mode").value
+        self.device = self.get_parameter("device").value
+        self.base_model_checkpoint_path = self.get_parameter("base_model_checkpoint_path").value
+        self.classifier_checkpoint_path = self.get_parameter("classifier_checkpoint_path").value
+        self.inference_rate_hz = float(self.get_parameter("inference_rate_hz").value)
+        self.confidence_threshold = float(self.get_parameter("confidence_threshold").value)
 
         image_topic = self.get_parameter("image_topic").value
         odom_topic = self.get_parameter("odom_topic").value
@@ -53,29 +60,61 @@ class InferenceNode(Node):
         output_goal_id_topic = self.get_parameter("output_goal_id_topic").value
         goal_library_path = self.get_parameter("goal_library_path").value
 
+        # ------------------------------------------------------------------
+        # Load goal library + model client
+        # ------------------------------------------------------------------
         self.goal_library = GoalLibrary(goal_library_path)
+
         self.model = ModelClient(
-            model_type=self.get_parameter("model_type").value,
-            checkpoint_path=self.get_parameter("checkpoint_path").value,
-            device=self.get_parameter("device").value,
+            model_type=self.model_type,
+            base_model_checkpoint_path=self.base_model_checkpoint_path,
+            classifier_checkpoint_path=self.classifier_checkpoint_path,
+            device=self.device,
             goal_library=self.goal_library,
         )
 
+        if self.mode == "prediction":
+            if self.model.model_loaded:
+                self.get_logger().info("Prediction mode enabled: finetuned classifier loaded.")
+            else:
+                self.get_logger().warn(
+                    "Prediction mode enabled, but model loading failed. "
+                    f"Will fallback to rule-based behavior. Reason: {self.model.load_error}"
+                )
+        elif self.mode == "pipeline_check":
+            self.get_logger().info("Pipeline-check mode enabled: using rule-based goal prediction.")
+        else:
+            self.get_logger().warn(
+                f"Unknown mode '{self.mode}'. Supported: pipeline_check, prediction. "
+                "Node will still run but inference will reject until mode is corrected."
+            )
+
+        # ------------------------------------------------------------------
+        # Runtime state
+        # ------------------------------------------------------------------
         self._latest_image = None
         self._latest_pose = None
         self._latest_prompt = None
         self._last_goal_id_sent = None
 
+        # ------------------------------------------------------------------
+        # Subscribers / publishers
+        # ------------------------------------------------------------------
         self.create_subscription(Image, image_topic, self._image_cb, 10)
         self.create_subscription(Odometry, odom_topic, self._odom_cb, 10)
         self.create_subscription(String, prompt_topic, self._prompt_cb, 10)
 
         self.goal_id_pub = self.create_publisher(String, output_goal_id_topic, 10)
 
-        period = 1.0 / max(0.1, float(self.get_parameter("inference_rate_hz").value))
+        # ------------------------------------------------------------------
+        # Timer
+        # ------------------------------------------------------------------
+        period = 1.0 / max(0.1, self.inference_rate_hz)
         self.timer = self.create_timer(period, self._run_inference)
 
-        self.get_logger().info("Inference node started.")
+        self.get_logger().info(
+            f"Inference node started | mode={self.mode} | rate={self.inference_rate_hz:.2f} Hz"
+        )
 
     def _image_cb(self, msg: Image) -> None:
         try:
@@ -87,11 +126,13 @@ class InferenceNode(Node):
         self._latest_pose = odom_to_xyyaw(msg)
 
     def _prompt_cb(self, msg: String) -> None:
-        self._latest_prompt = msg.data
+        self._latest_prompt = msg.data.strip()
 
     def _run_inference(self) -> None:
-        if self.mode != "goal_id":
-            self.get_logger().warn("Only mode='goal_id' is implemented in this test version.")
+        if self.mode not in {"pipeline_check", "prediction"}:
+            self.get_logger().warn(
+                f"Unsupported mode '{self.mode}'. Supported modes: pipeline_check, prediction"
+            )
             return
 
         if self._latest_image is None or self._latest_pose is None or not self._latest_prompt:
@@ -102,6 +143,7 @@ class InferenceNode(Node):
             pose_xyyaw=self._latest_pose,
             prompt=self._latest_prompt,
             goal_image=None,
+            mode=self.mode,
         )
 
         if not goal_id:
@@ -121,8 +163,10 @@ class InferenceNode(Node):
         msg.data = goal_id
         self.goal_id_pub.publish(msg)
         self._last_goal_id_sent = goal_id
+
         self.get_logger().info(
-            f"Published inferred goal_id='{goal_id}' with confidence={confidence:.2f}"
+            f"[{self.mode}] Published inferred goal_id='{goal_id}' "
+            f"with confidence={confidence:.2f}"
         )
 
 
