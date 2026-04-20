@@ -17,3 +17,6 @@ CATKIN_IGNORE
 *.swp
 log/
 test/
+
+datasets/
+omnivla-edge/
