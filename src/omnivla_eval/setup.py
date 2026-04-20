@@ -13,17 +13,14 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='andy',
-    maintainer_email='andytsai104@gmail.com',
-    description='TODO: Package description',
-    license='MIT',
-    extras_require={
-        'test': [
-            'pytest',
-        ],
-    },
+    maintainer='Roy Yu',
+    maintainer_email='mengjuyu@asu.edu',
+    description='Evaluation system for OmniVLA-edge and Nav2',
+    license='Apache-2.0',
+    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'eval_runner_node = omnivla_eval.eval_runner_node:main',
         ],
     },
 )
