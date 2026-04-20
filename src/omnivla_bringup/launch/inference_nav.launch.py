@@ -53,10 +53,7 @@ def generate_launch_description():
         executable="inference_node",
         name="inference_node",
         output="screen",
-        parameters=[
-            runtime_config,
-            goal_library_config,
-        ],
+        parameters=[runtime_config],
     )
 
     nav2_goal_bridge_node = Node(
@@ -64,10 +61,7 @@ def generate_launch_description():
         executable="nav2_goal_bridge_node",
         name="nav2_goal_bridge_node",
         output="screen",
-        parameters=[
-            runtime_config,
-            goal_library_config,
-        ],
+        parameters=[runtime_config],
     )
 
     return LaunchDescription([

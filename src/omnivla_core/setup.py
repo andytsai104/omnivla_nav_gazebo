@@ -24,6 +24,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
+        "inference_node = omnivla_core.inference_node:main",
+        "nav2_goal_bridge_node = omnivla_core.nav2_goal_bridge_node:main",
         ],
     },
 )
