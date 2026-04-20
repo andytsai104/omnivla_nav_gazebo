@@ -52,7 +52,8 @@ class EvalRunnerNode(Node):
         goal.pose.pose.orientation.w = 1.0
         self.monitor.is_active = True
         self.metrics.start()
-        self.client.wait_for_server()
+        if not self.client.wait_for_server(timeout_sec=2.0):
+            return
         self.future = self.client.send_goal_async(goal)
         self.future.add_done_callback(self.response_cb)
 
