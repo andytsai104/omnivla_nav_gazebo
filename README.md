@@ -9,8 +9,7 @@ This project focuses on bridging **semantic understanding (language + vision)** 
 ![Nav2](https://img.shields.io/badge/Nav2-Navigation-green)
 
 ## Demo Video
-
-[![Watch the demo](https://img.youtube.com/vi/JP31pXTPZl8/0.jpg)](https://www.youtube.com/watch?v=JP31pXTPZl8)
+[![Demo](./media/omnivla_demo.gif)](https://www.youtube.com/watch?v=JP31pXTPZl8)
 
 ---
 
