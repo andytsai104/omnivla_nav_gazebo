@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Data collection mode launch file.
 
 Intended purpose:

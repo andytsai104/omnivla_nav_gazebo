@@ -160,7 +160,7 @@ goals:
       x: 3.774
       y: 1.856
       yaw: -1.594
-    goal_image: "assets/goal_images/enter_small_shelf_row.png"
+    goal_image: "images/goal_images/enter_small_shelf_row.png"
     aliases:
       - "enter small shelf row"
       - "small shelf entrance"

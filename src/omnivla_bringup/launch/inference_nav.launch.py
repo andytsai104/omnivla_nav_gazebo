@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Inference + Nav2 launch file.
 
 Intended purpose:

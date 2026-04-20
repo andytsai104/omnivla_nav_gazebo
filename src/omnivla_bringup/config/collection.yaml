@@ -8,7 +8,7 @@ data_logger_node:
   ros__parameters:
     use_sim_time: true
 
-    output_dir: "./datasets/run_001"
+    output_dir: "./datasets/run_002"
     save_images: true
     save_metadata_json: true
     save_metadata_csv: false
@@ -36,9 +36,9 @@ episode_manager_node:
     random_goal: true
     reset_between_episodes: false
 
-    reset_timeout_sec: 120.0
-    episode_length_sec: 120.0
-    max_episodes: 60
+    reset_timeout_sec: 180.0
+    episode_length_sec: 180.0
+    max_episodes: 100
     min_start_goal_distance: 1.5
 
     spawn_frame_id: "map"

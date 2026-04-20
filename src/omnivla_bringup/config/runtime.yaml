@@ -15,6 +15,9 @@ inference_node:
     inference_rate_hz: 2.0
     confidence_threshold: 0.50
 
+    base_model_checkpoint_path: "./omnivla-edge/omnivla-edge.pth"
+    classifier_checkpoint_path: "./omnivla_finetune/checkpoints/omnivla_edge_goal_classifier.pt"
+
     image_topic: "/bcr_bot/stereo_camera/left/image_raw"
     camera_info_topic: "/bcr_bot/stereo_camera/left/camera_info"
     odom_topic: "/bcr_bot/odom"

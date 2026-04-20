@@ -1,14 +1,3 @@
-"""Simulation bringup launch file.
-
-Intended purpose:
-- launch the BCR Bot in Gazebo Harmonic
-- load the warehouse / house world
-- start required ROS 2 bridges / robot topics
-- optionally start RViz
-- prepare the base sim stack before data collection or inference
-"""
-
-#!/usr/bin/env python3
 """
 Simulation bringup launch file.
 
