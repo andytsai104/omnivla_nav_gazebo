@@ -151,3 +151,21 @@ goals:
       - "go in the small shelves"
     room: "warehouse"
     enabled: true
+
+  - id: enter_small_shelf_row
+    label: "small shelf entrance"
+    category: "storage"
+    frame_id: "map"
+    pose:
+      x: 3.774
+      y: 1.856
+      yaw: -1.594
+    goal_image: "assets/goal_images/enter_small_shelf_row.png"
+    aliases:
+      - "enter small shelf row"
+      - "small shelf entrance"
+      - "entrance to small shelves"
+      - "go to the small shelf entrance"
+      - "go to the entrance of the small shelf row"
+    room: "warehouse"
+    enabled: true
