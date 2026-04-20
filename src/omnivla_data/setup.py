@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'sample_goal_node = omnivla_data.sample_goal_node:main',
         ],
     },
 )

@@ -24,19 +24,128 @@
 #       - "go to the left desk"
 #     room: optional since we only have one scene in warehouse
 #     enabled: boolean for whther to enable this label (optional but keep it for larger dataset)
-# goals:
-#   - id: desk_left
-#     label: "left desk"
-#     category: "workspace"
-#     frame_id: "map"
-#     pose:
-#       x: 2.35
-#       y: -1.10
-#       yaw: 1.57
-#     goal_image: "images/goal_images/desk_left.png"
-#     aliases:
-#       - "left desk"
-#       - "desk on the left"
-#       - "go to the left desk"
-#     room: "warehouse_room_a"
-#     enabled: true
+
+goals:
+  - id: trash_can_left
+    label: "left trash can"
+    category: "workspace"
+    frame_id: "odom"
+    pose:
+      x: -0.187
+      y: 7.555
+      yaw: -1.536
+    goal_image: "images/goal_images/trash_can_left.png"
+    aliases:
+      - "left trash can"
+      - "left can"
+      - "trash can on the left"
+      - "go to the left trash can"
+      - "go to the left of trash can"
+    room: "warehouse"
+    enabled: true
+
+  - id: box_staging_area
+    label: "box staging area"
+    category: "workspace"
+    frame_id: "odom"
+    pose:
+      x: 1.545
+      y: 6.535
+      yaw: 1.485
+    goal_image: "images/goal_images/box_staging_area.png"
+    aliases:
+      - "box staging area"
+      - "package staging area"
+      - "staging area"
+      - "box pile"
+      - "package pile"
+      - "unpacked boxes area"
+      - "go to the box staging area"
+    room: "warehouse"
+    enabled: true
+
+  - id: small_shelf_row
+    label: "small shelf row"
+    category: "storage"
+    frame_id: "odom"
+    pose:
+      x: 1.937
+      y: -7.778
+      yaw: 1.624
+    goal_image: "images/goal_images/small_shelf_row.png"
+    aliases:
+      - "small shelf row"
+      - “small shelf aisle”
+      - “narrow shelf aisle”
+      - "small storage shelves"
+      - "small shelves"
+      - "small shelf area"
+      - "small rack shelves"
+      - "warehouse small shelves"
+      - "go to the small shelves"
+      - "go to the small shelf row"
+    room: "warehouse"
+    enabled: true
+
+  - id: mini_packaging_section
+    label: "mini packaging section"
+    category: "workspace"
+    frame_id: "odom"
+    pose:
+      x: 0.342
+      y: 3.57
+      yaw: 3.101
+    goal_image: "images/goal_images/mini_packaging_section.png"
+    aliases:
+      - "mini packaging section"
+      - "small package section"
+      - "packaging area"
+      - "package table area"
+      - "small packages area"
+      - "go to the packaging section"
+      - "go to the small package area"
+    room: "warehouse"
+    enabled: true
+
+  - id: big_shelf_area
+    label: "big shelf area"
+    category: "storage"
+    frame_id: "odom"
+    pose:
+      x: -3.858
+      y: -8.011
+      yaw: 1.54
+    goal_image: "images/goal_images/big_shelf_area.png"
+    aliases:
+      - "big shelf area"
+      - "large shelf area"
+      - "big shelf section"
+      - "main shelf area"
+      - "large storage shelf"
+      - "go to the big shelf area"
+      - "go to the large shelf"
+      - "go to the main shelf area"
+      - “large warehouse shelves”
+      - “main shelf area”
+    room: "warehouse"
+    enabled: true
+  
+  - id: inside_small_shelf
+    label: "inside small shelf"
+    category: "storage"
+    frame_id: "odom"
+    pose:
+      x: 5.231
+      y: -5.906
+      yaw: -3.134
+    goal_image: "images/goal_images/inside_small_shelf.png"
+    aliases:
+      - "in small shelf row"
+      - "in small shelves"
+      - "in small shelf area"
+      - "in small storage shelves"
+      - "in small rack shelves"
+      - "go in the small shelf row"
+      - "go in the small shelves"
+    room: "warehouse"
+    enabled: true

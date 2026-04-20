@@ -1,0 +1,14 @@
+sample_goal_node:
+  ros__parameters:
+    use_sim_time: true
+
+    image_topic: "/bcr_bot/stereo_camera/left/image_raw"
+    odom_topic: "/bcr_bot/odom"
+
+    image_output_dir: "src/omnivla_bringup/images/goal_images"
+    frame_id: "odom"
+    room: "warehouse"
+    enabled: true
+
+    xy_round_digits: 3
+    yaw_round_digits: 3

@@ -48,6 +48,7 @@ def generate_launch_description():
     odometry_source = LaunchConfiguration("odometry_source")
 
     default_world = join(bcr_bot_path, "worlds", "small_warehouse.sdf")
+    # default_world = join(bringup_pkg_path, "worlds", "warehouse.sdf")
     default_rviz_config = join(bringup_pkg_path, "rviz", "sim.rviz")
 
     # Include official BCR Gazebo launch
