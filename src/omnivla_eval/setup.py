@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'eval_runner_node = omnivla_eval.eval_runner_node:main',
         ],
     },
 )
