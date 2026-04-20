@@ -53,7 +53,10 @@ def generate_launch_description():
         executable="inference_node",
         name="inference_node",
         output="screen",
-        parameters=[runtime_config],
+        parameters=[
+            runtime_config,
+            {"goal_library_path": goal_library_config},
+        ],
     )
 
     nav2_goal_bridge_node = Node(
@@ -61,7 +64,17 @@ def generate_launch_description():
         executable="nav2_goal_bridge_node",
         name="nav2_goal_bridge_node",
         output="screen",
-        parameters=[runtime_config],
+        parameters=[
+            runtime_config,
+            {"goal_library_path": goal_library_config},
+        ],
+    )
+
+    basefootprint_to_baselink_node = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="basefootprint_to_baselink",
+        arguments=["0", "0", "0", "0", "0", "0", "base_footprint", "base_link"],
     )
 
     return LaunchDescription([
@@ -87,6 +100,7 @@ def generate_launch_description():
         ),
 
         sim_launch,
+        basefootprint_to_baselink_node,
         nav2_launch,
         inference_node,
         nav2_goal_bridge_node,

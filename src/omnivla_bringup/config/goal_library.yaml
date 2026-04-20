@@ -77,8 +77,8 @@ goals:
     goal_image: "images/goal_images/small_shelf_row.png"
     aliases:
       - "small shelf row"
-      - “small shelf aisle”
-      - “narrow shelf aisle”
+      - "small shelf aisle"
+      - "narrow shelf aisle"
       - "small storage shelves"
       - "small shelves"
       - "small shelf area"
@@ -127,8 +127,8 @@ goals:
       - "go to the big shelf area"
       - "go to the large shelf"
       - "go to the main shelf area"
-      - “large warehouse shelves”
-      - “main shelf area”
+      - "large warehouse shelves"
+      - "main shelf area"
     room: "warehouse"
     enabled: true
   
