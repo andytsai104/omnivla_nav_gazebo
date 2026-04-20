@@ -7,7 +7,10 @@ This project focuses on bridging **semantic understanding (language + vision)** 
 ![ROS 2](https://img.shields.io/badge/ROS_2-Jazzy-blue)
 ![Gazebo](https://img.shields.io/badge/Gazebo-Harmonic-orange)
 ![Nav2](https://img.shields.io/badge/Nav2-Navigation-green)
-![Video](https://www.youtube.com/watch?v=JP31pXTPZl8)
+
+## Demo Video
+
+[![Watch the demo](https://img.youtube.com/vi/JP31pXTPZl8/0.jpg)](https://www.youtube.com/watch?v=JP31pXTPZl8)
 
 ---
 
@@ -205,7 +208,10 @@ https://github.com/roy0823
 
 ## References & Resources
 
-- OmniVLA / Vision-Language-Action research  
+This project builds on the following upstream repositories:
+
+- [OmniVLA](https://github.com/NHirose/OmniVLA/tree/main) for the base vision-language-action model
+- [bcr_bot](https://github.com/blackcoffeerobotics/bcr_bot/tree/ros2-jazzy?tab=readme-ov-file#jazzy--harmonic-ubuntu-2404) for the robot simulation platform
 - ROS 2 Navigation Stack (Nav2)  
 - Gazebo Harmonic simulation  
 - ROS 2 documentation  
