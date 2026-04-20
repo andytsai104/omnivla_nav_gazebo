@@ -23,7 +23,6 @@ omnivla_ws/
 │
 ├── omnivla_finetune/         # Finetuning + classifier training
 │   ├── checkpoints/
-│   ├── datasets/
 │   └── training scripts
 │
 ├── src/
