@@ -1,0 +1,12 @@
+# prompt_templates.yaml
+templates:
+  - "Go to the {target}."
+  - "Navigate to the {target}."
+  - "Move to the {target}."
+  - "Can you find the {target}?"
+  - "Take me to the {target}."
+  - "Head over to the {target}."
+  - "Proceed to the {target}."
+  - "Please go to the {target}."
+  - "I need you to go to the {target}."
+  - "Find the {target}."
