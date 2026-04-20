@@ -13,7 +13,7 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='Roy Yu',
+    maintainer='Roy',
     maintainer_email='mengjuyu@asu.edu',
     description='Evaluation system for OmniVLA-edge and Nav2',
     license='Apache-2.0',
