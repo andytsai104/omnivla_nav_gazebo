@@ -7,7 +7,7 @@
     Data collection package for OmniVLA navigation.
     Handles episode management, sensor logging, and dataset export.
   </description>
-  <maintainer email="you@example.com">Your Name</maintainer>
+  <maintainer email="hcheng57@asu.edu">Alan</maintainer>
   <license>MIT</license>
 
   <depend>rclpy</depend>
@@ -19,6 +19,9 @@
   <depend>nav2_msgs</depend>
   <depend>action_msgs</depend>
   <depend>cv_bridge</depend>
+  <depend>python3-yaml</depend>
+  <depend>python3-h5py</depend>
+  <depend>python3-opencv</depend>
 
   <buildtool_depend>ament_python</buildtool_depend>
   <test_depend>ament_copyright</test_depend>

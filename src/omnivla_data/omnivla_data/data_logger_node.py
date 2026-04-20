@@ -44,6 +44,7 @@ from std_srvs.srv import Trigger
 from sensor_msgs.msg import Image, CameraInfo
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import PoseStamped
+from omnivla_data.sync_utils import SyncBuffer
 
 try:
     from cv_bridge import CvBridge
@@ -90,42 +91,6 @@ def pose_stamped_to_dict(msg: PoseStamped) -> dict:
 
 def stamp_to_sec(stamp) -> float:
     return stamp.sec + stamp.nanosec * 1e-9
-
-
-# ---------------------------------------------------------------------------
-# Simple time synchronization buffer
-# ---------------------------------------------------------------------------
-
-class SyncBuffer:
-    """
-    Stores the latest message for each key.
-    get_synced() returns a dict of messages when the timestamp difference of all keys is <= slop_sec.
-    """
-
-    def __init__(self, keys: list, slop_sec: float):
-        self._keys   = keys
-        self._slop   = slop_sec
-        self._msgs   = {k: None for k in keys}
-        self._stamps = {k: 0.0  for k in keys}
-        self._lock   = threading.Lock()
-
-    def update(self, key: str, msg, stamp_sec: float):
-        with self._lock:
-            self._msgs[key]   = msg
-            self._stamps[key] = stamp_sec
-
-    def get_synced(self):
-        """
-        If the timestamps of all messages are within the slop range, returns a {key: msg} dict;
-        Otherwise, returns None.
-        """
-        with self._lock:
-            if any(m is None for m in self._msgs.values()):
-                return None
-            stamps = list(self._stamps.values())
-            if max(stamps) - min(stamps) > self._slop:
-                return None
-            return dict(self._msgs)
 
 
 # ---------------------------------------------------------------------------

@@ -38,6 +38,8 @@ from std_srvs.srv import Trigger
 from geometry_msgs.msg import PoseStamped
 from nav2_msgs.action import NavigateToPose
 from action_msgs.msg import GoalStatus
+from omnivla_data.prompt_sampler import PromptSampler
+from omnivla_data.goal_sampler import GoalSampler
 
 
 # ---------------------------------------------------------------------------
@@ -63,10 +65,6 @@ def make_pose_stamped(x: float, y: float, yaw: float,
     pose.pose.orientation.z = q['z']
     pose.pose.orientation.w = q['w']
     return pose
-
-
-def euclidean_dist(p1: dict, p2: dict) -> float:
-    return math.sqrt((p1['x'] - p2['x'])**2 + (p1['y'] - p2['y'])**2)
 
 
 def load_goal_library(path: str) -> list:
@@ -103,6 +101,7 @@ class EpisodeManagerNode(Node):
 
         # ── Parameters (fully aligned with collection.yaml) ────────────────────────────
         self.declare_parameter('goal_library_path',        'config/goal_library.yaml')
+        self.declare_parameter('prompt_template_path',     'config/prompt_templates.yaml')
         self.declare_parameter('prompt_mode',              'aliases')
         self.declare_parameter('random_start',             True)
         self.declare_parameter('random_goal',              True)
@@ -116,6 +115,7 @@ class EpisodeManagerNode(Node):
         self.declare_parameter('publish_goal_pose_topic',  '/goal_pose')
 
         self.goal_library_path       = self.get_parameter('goal_library_path').value
+        self.prompt_template_path    = self.get_parameter('prompt_template_path').value
         self.prompt_mode             = self.get_parameter('prompt_mode').value
         self.random_start            = self.get_parameter('random_start').value
         self.random_goal             = self.get_parameter('random_goal').value
@@ -134,6 +134,16 @@ class EpisodeManagerNode(Node):
             f'Loaded {len(self.goals)} available goals from: {self.goal_library_path}'
         )
 
+        self.prompt_sampler = PromptSampler(
+            mode=self.prompt_mode, 
+            template_yaml_path=self.prompt_template_path
+        )
+
+        self.goal_sampler = GoalSampler(
+            goals=self.goals, 
+            min_dist=self.min_dist
+        )
+        
         # ── State ────────────────────────────────────────────────────────────
         self._running          = False
         self._stop_requested   = False
@@ -220,26 +230,24 @@ class EpisodeManagerNode(Node):
 
             self.get_logger().info(f'══ Episode {ep_num}/{self.max_episodes} Started ══')
 
-            # 1. Sample goal
-            goal = random.choice(self.goals) if self.random_goal else self.goals[0]
+            # 1. Sample goal (Target)
+            if self.random_goal:
+                goal = self.goal_sampler.sample_target()
+            else:
+                goal = self.goals[0]
+                
             prompt = self._sample_prompt(goal)
             self.get_logger().info(
                 f'Goal: id="{goal["id"]}"  prompt="{prompt}"'
             )
 
-            # 2. Sample start pose (ensure enough distance from goal)
+            # 2. Sample start pose (Initial State), ensuring minimum distance to goal
             start_goal = None
-            if self.random_start and len(self.goals) > 1:
-                candidates = [
-                    g for g in self.goals
-                    if g['id'] != goal['id']
-                    and euclidean_dist(g['pose'], goal['pose']) >= self.min_dist
-                ]
-                if candidates:
-                    start_goal = random.choice(candidates)
-                else:
+            if self.random_start:
+                start_goal = self.goal_sampler.sample_start(target_goal=goal)
+                if not start_goal:
                     self.get_logger().warn(
-                        f'Could not find a start pose with distance >= {self.min_dist}m, using the goal pose itself'
+                        f'Could not find a start pose with distance >= {self.min_dist}m, using map origin.'
                     )
 
             # 3. Reset robot to start pose
@@ -319,12 +327,15 @@ class EpisodeManagerNode(Node):
             stop_resp = self._call_trigger(self._stop_log_cli, 'stop_logging')
             if not stop_resp or not stop_resp.success:
                 self.get_logger().warn('stop_logging call failed')
+            
+            self.goal_sampler.record_visit(goal['id'])
 
         self.get_logger().info(
             f'Completed {self.max_episodes} episodes, collection finished'
         )
         with self._collection_lock:
             self._running = False
+
 
     # ── Nav2 helper ───────────────────────────────────────────────────────────
 
@@ -392,15 +403,10 @@ class EpisodeManagerNode(Node):
 
     def _sample_prompt(self, goal: dict) -> str:
         """
-        Selects language prompt based on prompt_mode:
-          'aliases' -> Randomly samples from goal.aliases
-          'label'   -> Uses goal.label directly
+        Selects language prompt based on prompt_mode using PromptSampler.
         """
-        if self.prompt_mode == 'aliases':
-            aliases = goal.get('aliases', [])
-            if aliases:
-                return random.choice(aliases)
-        return goal.get('label', goal['id'])
+
+        return self.prompt_sampler.sample(goal)
 
     # ── Service call helper ───────────────────────────────────────────────────
 
