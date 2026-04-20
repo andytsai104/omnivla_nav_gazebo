@@ -41,6 +41,25 @@ def generate_launch_description():
         condition=IfCondition(use_sim),
     )
 
+    nav2_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            join(bcr_bot_pkg, "launch", "nav2.launch.py")
+        ),
+        launch_arguments={
+            "use_sim_time": "true",
+            "autostart": "true",
+        }.items(),
+        condition=IfCondition(use_sim),
+    )
+
+    basefootprint_to_baselink_node = Node(
+        package="tf2_ros",
+        executable="static_transform_publisher",
+        name="basefootprint_to_baselink",
+        arguments=["0", "0", "0", "0", "0", "0", "base_footprint", "base_link"],
+        condition=IfCondition(use_sim),
+    )
+
     episode_manager_node = Node(
         package="omnivla_data",
         executable="episode_manager_node",
@@ -48,8 +67,8 @@ def generate_launch_description():
         output="screen",
         parameters=[
             collection_config,
-            goal_library_config,
-        ],
+            {"goal_library_path": goal_library_config},
+        ]
     )
 
     data_logger_node = Node(
@@ -59,38 +78,28 @@ def generate_launch_description():
         output="screen",
         parameters=[
             collection_config,
-            goal_library_config,
-        ],
+        ]
     )
 
     return LaunchDescription([
-        DeclareLaunchArgument(
-            "use_sim",
-            default_value="true",
-            description="Whether to launch simulation",
-        ),
-        DeclareLaunchArgument(
-            "use_rviz",
-            default_value="true",
-            description="Whether to launch RViz with sim",
-        ),
+        DeclareLaunchArgument("use_sim", default_value="true"),
+        DeclareLaunchArgument("use_rviz", default_value="false"),
         DeclareLaunchArgument(
             "world",
             default_value=join(bcr_bot_pkg, "worlds", "small_warehouse.sdf"),
-            description="Gazebo world file",
         ),
         DeclareLaunchArgument(
             "collection_config",
             default_value=join(bringup_pkg, "config", "collection.yaml"),
-            description="Collection config YAML",
         ),
         DeclareLaunchArgument(
             "goal_library_config",
             default_value=join(bringup_pkg, "config", "goal_library.yaml"),
-            description="Goal library YAML",
         ),
 
         sim_launch,
+        basefootprint_to_baselink_node,
+        nav2_launch,
         episode_manager_node,
         data_logger_node,
     ])

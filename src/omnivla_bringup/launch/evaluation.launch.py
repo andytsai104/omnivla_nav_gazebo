@@ -47,7 +47,7 @@ def generate_launch_description():
         output="screen",
         parameters=[
             eval_config,
-            goal_library_config,
+            {"goal_library_path": goal_library_config},
         ],
     )
 

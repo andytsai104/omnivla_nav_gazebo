@@ -8,7 +8,7 @@ data_logger_node:
   ros__parameters:
     use_sim_time: true
 
-    output_dir: "datasets/run_001"
+    output_dir: "./datasets/run_001"
     save_images: true
     save_metadata_json: true
     save_metadata_csv: false
@@ -21,22 +21,24 @@ data_logger_node:
     goal_id_topic: "/omnivla/goal_id"
     goal_pose_topic: "/goal_pose"
 
-    sample_rate_hz: 2.0
+    sample_rate_hz: 0.5
     sync_slop_sec: 0.20
 
 episode_manager_node:
   ros__parameters:
     use_sim_time: true
 
-    goal_library_path: "config/goal_library.yaml"
+    goal_library_path: "./src/omnivla_bringup/config/goal_library.yaml"
+    prompt_template_path: "./src/omnivla_bringup/config/prompt_tamplates.yaml"
 
     prompt_mode: "aliases"
     random_start: true
     random_goal: true
-    reset_between_episodes: true
+    reset_between_episodes: false
 
-    episode_length_sec: 45.0
-    max_episodes: 50
+    reset_timeout_sec: 120.0
+    episode_length_sec: 120.0
+    max_episodes: 60
     min_start_goal_distance: 1.5
 
     spawn_frame_id: "map"

@@ -113,6 +113,7 @@ class EpisodeManagerNode(Node):
         self.declare_parameter('publish_prompt_topic',     '/omnivla/prompt')
         self.declare_parameter('publish_goal_id_topic',    '/omnivla/goal_id')
         self.declare_parameter('publish_goal_pose_topic',  '/goal_pose')
+        self.declare_parameter('reset_timeout_sec', 60.0)
 
         self.goal_library_path       = self.get_parameter('goal_library_path').value
         self.prompt_template_path    = self.get_parameter('prompt_template_path').value
@@ -127,6 +128,7 @@ class EpisodeManagerNode(Node):
         self.prompt_topic            = self.get_parameter('publish_prompt_topic').value
         self.goal_id_topic           = self.get_parameter('publish_goal_id_topic').value
         self.goal_pose_topic         = self.get_parameter('publish_goal_pose_topic').value
+        self.reset_timeout_sec = self.get_parameter('reset_timeout_sec').value
 
         # ── Goal library ────────────────────────────────────────────────────
         self.goals = load_goal_library(self.goal_library_path)
@@ -267,7 +269,7 @@ class EpisodeManagerNode(Node):
 
                 reset_ok = self._navigate_to(
                     sx, sy, syaw, fid,
-                    timeout_sec=30.0,
+                    timeout_sec=self.reset_timeout_sec,
                     label='Reset Navigation'
                 )
                 if not reset_ok:
@@ -414,12 +416,34 @@ class EpisodeManagerNode(Node):
         if not client.wait_for_service(timeout_sec=3.0):
             self.get_logger().error(f'Service "{name}" unavailable')
             return None
+
         future = client.call_async(Trigger.Request())
-        rclpy.spin_until_future_complete(self, future, timeout_sec=5.0)
-        if future.done():
-            return future.result()
-        self.get_logger().error(f'Service call "{name}" timeout')
-        return None
+
+        done_event = threading.Event()
+        result_holder = {"result": None, "error": None}
+
+        def _done_cb(fut):
+            try:
+                result_holder["result"] = fut.result()
+            except Exception as e:
+                result_holder["error"] = e
+            finally:
+                done_event.set()
+
+        future.add_done_callback(_done_cb)
+
+        finished = done_event.wait(timeout=5.0)
+        if not finished:
+            self.get_logger().error(f'Service call "{name}" timeout')
+            return None
+
+        if result_holder["error"] is not None:
+            self.get_logger().error(
+                f'Service call "{name}" failed: {result_holder["error"]}'
+            )
+            return None
+
+        return result_holder["result"]
 
 
 # ---------------------------------------------------------------------------

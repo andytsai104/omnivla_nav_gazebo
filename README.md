@@ -46,68 +46,14 @@ source install/setup.bash
 
 ---
 
-## Package Responsibilities
-
-### omnivla_bringup
-- all launch files
-- all yaml configs
-- orchestrate modes (sim / data / inference / eval)
-
-### omnivla_core
-- inference node (OmniVLA)
-- goal resolver
-- Nav2 goal bridge
-
-### omnivla_data
-- data logger
-- episode reset / sampling
-- dataset export helpers
-
-### omnivla_eval
-- evaluation runner
-- metrics (success, time, collision)
-- result logging
-
----
-
-## Minimal Files to Start
-
-```
-omnivla_bringup/
-  launch/sim.launch.py
-  launch/data_collection.launch.py
-  config/goal_library.yaml
-
-omnivla_core/
-  omnivla_core/
-    inference_node.py
-    nav2_goal_bridge_node.py
-    goal_library.py
-
-omnivla_data/
-  omnivla_data/
-    data_logger_node.py
-    episode_manager_node.py
-
-omnivla_eval/
-  omnivla_eval/
-    eval_runner_node.py
-    metrics.py
-```
-
----
-
-## Dev Flow
-
-```
-1. bring up sim + nav2 (bcr_bot)
-2. define goal_library.yaml
-3. collect data (omnivla_data)
-4. export dataset → OmniVLA/
-5. finetune model
-6. run inference (omnivla_core)
-7. send goal → Nav2
-8. run evaluation (omnivla_eval)
+## Export Dataset
+```bash
+python3 ./omnivla_finetune/export_goal_classifier_jsonl.py \
+  --run-dir ./datasets/run_001 \
+  --goal-library ./src/omnivla_bringup/config/goal_library.yaml \
+  --out-dir ./datasets/export_goal_classifier \
+  --keep-every-n 2 \
+  --success-only
 ```
 
 ---
@@ -116,36 +62,36 @@ omnivla_eval/
 
 
 ### omnivla_bringup
-- [ ] launch/sim.launch.py
-- [ ] launch/data_collection.launch.py
-- [ ] launch/inference_nav.launch.py
-- [ ] launch/evaluation.launch.py
-- [ ] config/goal_library.yaml
-- [ ] config/runtime.yaml
-- [ ] config/collection.yaml
-- [ ] config/eval.yaml
+- [x] launch/sim.launch.py
+- [x] launch/data_collection.launch.py
+- [x] launch/inference_nav.launch.py
+- [x] launch/evaluation.launch.py
+- [x] config/goal_library.yaml
+- [x] config/runtime.yaml
+- [x] config/collection.yaml
+- [x] config/eval.yaml
 
 ### omnivla_core
-- [ ] inference_node.py
-- [ ] nav2_goal_bridge_node.py
-- [ ] goal_library.py
-- [ ] model_client.py
-- [ ] image_utils.py
-- [ ] pose_utils.py
+- [x] inference_node.py
+- [x] nav2_goal_bridge_node.py
+- [x] goal_library.py
+- [x] model_client.py
+- [x] image_utils.py
+- [x] pose_utils.py
 
 ### omnivla_data
-- [ ] data_logger_node.py
-- [ ] episode_manager_node.py
-- [ ] prompt_sampler.py
-- [ ] goal_sampler.py
-- [ ] sync_utils.py
-- [ ] export_utils.py
+- [x] data_logger_node.py
+- [x] episode_manager_node.py
+- [x] prompt_sampler.py
+- [x] goal_sampler.py
+- [x] sync_utils.py
+- [x] export_utils.py
 
 ### omnivla_eval
 - [ ] eval_runner_node.py
-- [ ] metrics.py
-- [ ] collision_monitor.py
-- [ ] success_checker.py
+- [x] metrics.py
+- [x] collision_monitor.py
+- [x] success_checker.py
 - [ ] result_logger.py
 
 ### OmniVLA (model side)
@@ -159,9 +105,9 @@ omnivla_eval/
 ---
 ## CURRENT MILESTONE
 
-- [ ] Nav2 baseline working (manual goal → robot moves)
-- [ ] goal_library.yaml defined (5–10 goals)
-- [ ] data logger saving valid samples
+- [x] Nav2 baseline working (manual goal → robot moves)
+- [x] goal_library.yaml defined (5–10 goals)
+- [x] data logger saving valid samples
 - [ ] first dataset exported
 - [ ] first model trained (goal classification)
 - [ ] inference node outputs correct goal ID

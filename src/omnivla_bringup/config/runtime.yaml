@@ -23,8 +23,8 @@ inference_node:
     output_goal_id_topic: "/omnivla/inferred_goal_id"
     output_goal_pose_topic: "/omnivla/inferred_goal_pose"
 
-    # goal_library_path: "./src/omnivla_bringup/config/goal_library.yaml"
-    goal_library_path: "/home/andy/ros2_projects/omnivla_ws/install/omnivla_bringup/share/omnivla_bringup/config/goal_library.yaml"
+    goal_library_path: "./src/omnivla_bringup/config/goal_library.yaml"
+    # goal_library_path: "/home/andy/ros2_projects/omnivla_ws/install/omnivla_bringup/share/omnivla_bringup/config/goal_library.yaml"
 
 nav2_goal_bridge_node:
   ros__parameters:
@@ -37,7 +37,7 @@ nav2_goal_bridge_node:
     nav2_goal_topic: "/goal_pose"
     goal_frame_id: "map"
     lookup_from_goal_library: true
-    # goal_library_path: "./src/omnivla_bringup/config/goal_library.yaml"
-    goal_library_path: "/home/andy/ros2_projects/omnivla_ws/install/omnivla_bringup/share/omnivla_bringup/config/goal_library.yaml"
+    goal_library_path: "./src/omnivla_bringup/config/goal_library.yaml"
+    # goal_library_path: "/home/andy/ros2_projects/omnivla_ws/install/omnivla_bringup/share/omnivla_bringup/config/goal_library.yaml"
 
     publish_debug_goal: true
