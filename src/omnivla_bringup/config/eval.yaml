@@ -4,6 +4,32 @@
 # - yaw threshold
 # - timeout per episode
 # - number of trials
-eval:
-  success_distance_m: 0.5
-  timeout_sec: 120.0
+eval_runner_node:
+  ros__parameters:
+    use_sim_time: true
+
+    num_trials: 20
+    episode_timeout_sec: 60.0
+
+    success_distance_threshold_m: 0.50
+    success_yaw_threshold_deg: 20.0
+
+    odom_topic: "/bcr_bot/odom"
+    nav_goal_topic: "/goal_pose"
+    inferred_goal_id_topic: "/omnivla/inferred_goal_id"
+
+    collision_topic: "/omnivla/collision"
+    result_dir: "eval_results/run_001"
+
+    randomize_goals: true
+    randomize_starts: true
+    goal_library_path: "config/goal_library.yaml"
+
+result_logger_node:
+  ros__parameters:
+    use_sim_time: true
+
+    result_dir: "eval_results/run_001"
+    save_json: true
+    save_csv: true
+    save_summary_txt: true

@@ -6,5 +6,29 @@
 # - topic names shared across packages
 # - base frame / odom frame / map frame
 project:
-  name: omnivla_nav_gazebo
+  name: "omnivla_nav_gazebo"
   use_sim_time: true
+
+frames:
+  map: "map"
+  odom: "odom"
+  base: "base_footprint"
+
+world:
+  default_world: "small_warehouse.sdf"
+
+topics:
+  image: "/bcr_bot/stereo_camera/left/image_raw"
+  camera_info: "/bcr_bot/stereo_camera/left/camera_info"
+  odom: "/bcr_bot/odom"
+  scan: "/bcr_bot/scan"
+  cmd_vel: "/bcr_bot/cmd_vel"
+  robot_description: "/robot_description"
+  tf: "/tf"
+  tf_static: "/tf_static"
+
+  prompt: "/omnivla/prompt"
+  goal_id: "/omnivla/goal_id"
+  inferred_goal_id: "/omnivla/inferred_goal_id"
+  inferred_goal_pose: "/omnivla/inferred_goal_pose"
+  nav2_goal: "/goal_pose"

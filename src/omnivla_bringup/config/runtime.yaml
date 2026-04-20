@@ -4,7 +4,38 @@
 # - model checkpoint path
 # - inference rate
 # - confidence threshold
-runtime:
-  image_topic: /camera/image_raw
-  pose_topic: /odom
-  prompt_topic: /nav_prompt
+inference_node:
+  ros__parameters:
+    use_sim_time: true
+
+    model_type: "omnivla_edge"
+    mode: "goal_id"
+    device: "cuda"
+    checkpoint_path: "checkpoints/latest.pt"
+    inference_rate_hz: 2.0
+    confidence_threshold: 0.50
+
+    image_topic: "/bcr_bot/stereo_camera/left/image_raw"
+    camera_info_topic: "/bcr_bot/stereo_camera/left/camera_info"
+    odom_topic: "/bcr_bot/odom"
+    prompt_topic: "/omnivla/prompt"
+
+    output_goal_id_topic: "/omnivla/inferred_goal_id"
+    output_goal_pose_topic: "/omnivla/inferred_goal_pose"
+
+    goal_library_path: "config/goal_library.yaml"
+
+nav2_goal_bridge_node:
+  ros__parameters:
+    use_sim_time: true
+
+    input_mode: "goal_id"
+    input_goal_id_topic: "/omnivla/inferred_goal_id"
+    input_goal_pose_topic: "/omnivla/inferred_goal_pose"
+
+    nav2_goal_topic: "/goal_pose"
+    goal_frame_id: "map"
+    lookup_from_goal_library: true
+    goal_library_path: "config/goal_library.yaml"
+
+    publish_debug_goal: true

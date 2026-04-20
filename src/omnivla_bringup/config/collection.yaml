@@ -4,6 +4,43 @@
 # - image save rate
 # - randomized start / goal behavior
 # - number of episodes
-collection:
-  output_dir: data/raw
-  max_episodes: 100
+data_logger_node:
+  ros__parameters:
+    use_sim_time: true
+
+    output_dir: "datasets/run_001"
+    save_images: true
+    save_metadata_json: true
+    save_metadata_csv: false
+
+    image_topic: "/bcr_bot/stereo_camera/left/image_raw"
+    camera_info_topic: "/bcr_bot/stereo_camera/left/camera_info"
+    odom_topic: "/bcr_bot/odom"
+
+    prompt_topic: "/omnivla/prompt"
+    goal_id_topic: "/omnivla/goal_id"
+    goal_pose_topic: "/goal_pose"
+
+    sample_rate_hz: 2.0
+    sync_slop_sec: 0.20
+
+episode_manager_node:
+  ros__parameters:
+    use_sim_time: true
+
+    goal_library_path: "config/goal_library.yaml"
+
+    prompt_mode: "aliases"
+    random_start: true
+    random_goal: true
+    reset_between_episodes: true
+
+    episode_length_sec: 45.0
+    max_episodes: 50
+    min_start_goal_distance: 1.5
+
+    spawn_frame_id: "map"
+
+    publish_prompt_topic: "/omnivla/prompt"
+    publish_goal_id_topic: "/omnivla/goal_id"
+    publish_goal_pose_topic: "/goal_pose"
