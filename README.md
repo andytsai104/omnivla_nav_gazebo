@@ -44,6 +44,17 @@ colcon build --symlink-install
 source install/setup.bash
 ```
 
+
+## Test inference_nav.launch.py
+terminl 1:
+```bash
+ros2 launch omnivla_bringup inference_nav.launch.py
+```
+terminal 2:
+```bash
+ros2 topic pub --once /omnivla/prompt std_msgs/msg/String "{data: 'go in the small shelf row'}"
+```
+
 ---
 
 ## Export Dataset
@@ -55,6 +66,41 @@ python3 ./omnivla_finetune/export_goal_classifier_jsonl.py \
   --keep-every-n 2 \
   --success-only
 ```
+
+---
+
+## Fintune Omnivla-edge
+```bash
+python3 ./omnivla_finetune/train_omnivla_edge_classifier.py \
+  --train-jsonl ./datasets/export_goal_classifier/train.jsonl \
+  --val-jsonl ./datasets/export_goal_classifier/val.jsonl \
+  --checkpoint-path ./omnivla-edge/omnivla-edge.pth \
+  --num-classes 7 \
+  --epochs 20 \
+  --batch-size 4 \
+  --feature-mode actions \
+  --device cuda
+
+```
+
+## Notes:
+best val_acc: 0.56
+```bash
+python3 ./omnivla_finetune/train_omnivla_edge_classifier.py \
+--train-jsonl ./datasets/export_goal_classifier/train.jsonl \
+--val-jsonl ./datasets/export_goal_classifier/val.jsonl \
+--checkpoint-path ./omnivla-edge/omnivla-edge.pth \
+--num-classes 7 \
+--epochs 20 \
+--batch-size 4 \
+--feature-mode actions \
+--device cuda \
+--lr 1e-4 \
+
+```
+
+
+
 
 ---
 
@@ -95,9 +141,9 @@ python3 ./omnivla_finetune/export_goal_classifier_jsonl.py \
 - [ ] result_logger.py
 
 ### OmniVLA (model side)
-- [ ] dataset export script
-- [ ] dataset loader
-- [ ] goal classifier training
+- [x] dataset export script
+- [x] dataset loader
+- [x] goal classifier training
 - [ ] LoRA setup
 - [ ] checkpoint saving
 - [ ] offline validation
@@ -108,8 +154,8 @@ python3 ./omnivla_finetune/export_goal_classifier_jsonl.py \
 - [x] Nav2 baseline working (manual goal → robot moves)
 - [x] goal_library.yaml defined (5–10 goals)
 - [x] data logger saving valid samples
-- [ ] first dataset exported
-- [ ] first model trained (goal classification)
+- [x] first dataset exported
+- [x] first model trained (goal classification)
 - [ ] inference node outputs correct goal ID
 - [ ] Nav2 bridge works with model output
 - [ ] evaluation script runs end-to-end

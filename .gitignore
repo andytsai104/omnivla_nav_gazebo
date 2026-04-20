@@ -20,3 +20,5 @@ test/
 
 datasets/
 omnivla-edge/
+*.pth
+*.pt
