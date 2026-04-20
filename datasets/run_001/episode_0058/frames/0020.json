@@ -1,0 +1,32 @@
+{
+  "frame_idx": 20,
+  "ros_stamp": 4487.9,
+  "wall_time": 1776688679.4761407,
+  "prompt": "small shelf entrance",
+  "goal_id": "enter_small_shelf_row",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 3.774,
+    "y": 1.856,
+    "yaw_rad": -1.5940000000000003
+  },
+  "odom": {
+    "position": {
+      "x": 2.7936960671121396,
+      "y": -5.804808165452672,
+      "z": 0.0
+    },
+    "orientation_quat": {
+      "x": -0.0009227399471370985,
+      "y": 0.0020220860758025584,
+      "z": 0.41516074367786754,
+      "w": 0.909745358123762
+    },
+    "yaw_rad": 0.8562412269773612,
+    "linear_vel": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "angular_vel_z": 0.0
+  }
+}

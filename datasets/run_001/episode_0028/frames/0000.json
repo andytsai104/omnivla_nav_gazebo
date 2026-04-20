@@ -1,0 +1,32 @@
+{
+  "frame_idx": 0,
+  "ros_stamp": 1949.9,
+  "wall_time": 1776685931.0288076,
+  "prompt": "go to the packaging section",
+  "goal_id": "mini_packaging_section",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 0.342,
+    "y": 3.57,
+    "yaw_rad": 3.101
+  },
+  "odom": {
+    "position": {
+      "x": -3.7927616082217774,
+      "y": -7.959579877961403,
+      "z": 0.0
+    },
+    "orientation_quat": {
+      "x": -0.0017243905749033425,
+      "y": 0.0014034245686838683,
+      "z": 0.7755891481461212,
+      "w": 0.6312341325962969
+    },
+    "yaw_rad": 1.7753018380241405,
+    "linear_vel": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "angular_vel_z": 0.0
+  }
+}

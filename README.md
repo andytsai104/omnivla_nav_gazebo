@@ -44,6 +44,7 @@ omnivla_ws/
 │   │
 │   └── omnivla_eval/         # (optional) evaluation tools
 │
+├── datasets/                 # collected episodes
 └── README.md
 ```
 

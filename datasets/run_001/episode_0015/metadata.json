@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0015",
+  "start_time": "2026-04-20T11:36:12.156745Z",
+  "end_time": "2026-04-20T11:36:12.464487Z",
+  "outcome": "success",
+  "goal_id": "mini_packaging_section",
+  "prompt": "go to the small package area",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 0.342,
+    "y": 3.57,
+    "yaw_rad": 3.101
+  },
+  "frame_count": 0
+}

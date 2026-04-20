@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0010",
+  "start_time": "2026-04-20T11:28:24.944096Z",
+  "end_time": "2026-04-20T11:30:25.200006Z",
+  "outcome": "timeout",
+  "goal_id": "inside_small_shelf",
+  "prompt": "go in the small shelves",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 5.231,
+    "y": -5.906,
+    "yaw_rad": -3.134
+  },
+  "frame_count": 57
+}

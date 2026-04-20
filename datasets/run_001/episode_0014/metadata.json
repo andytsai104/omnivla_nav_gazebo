@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0014",
+  "start_time": "2026-04-20T11:34:55.389321Z",
+  "end_time": "2026-04-20T11:36:11.952426Z",
+  "outcome": "success",
+  "goal_id": "mini_packaging_section",
+  "prompt": "small package section",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 0.342,
+    "y": 3.57,
+    "yaw_rad": 3.101
+  },
+  "frame_count": 36
+}

@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0059",
+  "start_time": "2026-04-20T12:39:15.135240Z",
+  "end_time": "2026-04-20T12:40:09.311111Z",
+  "outcome": "success",
+  "goal_id": "box_staging_area",
+  "prompt": "unpacked boxes area",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 1.545,
+    "y": 6.535,
+    "yaw_rad": 1.485
+  },
+  "frame_count": 25
+}

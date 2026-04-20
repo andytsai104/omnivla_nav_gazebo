@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0027",
+  "start_time": "2026-04-20T11:51:09.826702Z",
+  "end_time": "2026-04-20T11:52:10.810303Z",
+  "outcome": "success",
+  "goal_id": "big_shelf_area",
+  "prompt": "large warehouse shelves",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": -3.858,
+    "y": -8.011,
+    "yaw_rad": 1.5399999999999998
+  },
+  "frame_count": 28
+}

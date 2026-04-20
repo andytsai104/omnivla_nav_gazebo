@@ -1,0 +1,32 @@
+{
+  "frame_idx": 31,
+  "ros_stamp": 3081.9,
+  "wall_time": 1776687156.43305,
+  "prompt": "go to the left of trash can",
+  "goal_id": "trash_can_left",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": -0.187,
+    "y": 7.555,
+    "yaw_rad": -1.536
+  },
+  "odom": {
+    "position": {
+      "x": -0.2572064403091111,
+      "y": 7.473163302058078,
+      "z": 0.0
+    },
+    "orientation_quat": {
+      "x": -0.0020637560244322365,
+      "y": -0.0008253542858633104,
+      "z": 0.928504644384898,
+      "w": -0.37131413258459256
+    },
+    "yaw_rad": -2.380742801510976,
+    "linear_vel": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "angular_vel_z": 0.0
+  }
+}

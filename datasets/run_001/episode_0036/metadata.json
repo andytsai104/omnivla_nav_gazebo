@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0036",
+  "start_time": "2026-04-20T12:02:48.214724Z",
+  "end_time": "2026-04-20T12:04:48.470871Z",
+  "outcome": "timeout",
+  "goal_id": "small_shelf_row",
+  "prompt": "small storage shelves",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 1.937,
+    "y": -7.778,
+    "yaw_rad": 1.624
+  },
+  "frame_count": 56
+}

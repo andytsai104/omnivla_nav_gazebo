@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0009",
+  "start_time": "2026-04-20T11:27:55.316478Z",
+  "end_time": "2026-04-20T11:28:24.740178Z",
+  "outcome": "success",
+  "goal_id": "trash_can_left",
+  "prompt": "go to the left trash can",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": -0.187,
+    "y": 7.555,
+    "yaw_rad": -1.536
+  },
+  "frame_count": 13
+}

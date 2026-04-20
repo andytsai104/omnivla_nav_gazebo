@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0037",
+  "start_time": "2026-04-20T12:04:48.674131Z",
+  "end_time": "2026-04-20T12:06:21.749088Z",
+  "outcome": "success",
+  "goal_id": "box_staging_area",
+  "prompt": "staging area",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 1.545,
+    "y": 6.535,
+    "yaw_rad": 1.485
+  },
+  "frame_count": 42
+}

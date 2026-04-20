@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0052",
+  "start_time": "2026-04-20T12:26:27.740902Z",
+  "end_time": "2026-04-20T12:28:17.792797Z",
+  "outcome": "success",
+  "goal_id": "inside_small_shelf",
+  "prompt": "in small rack shelves",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 5.231,
+    "y": -5.906,
+    "yaw_rad": -3.134
+  },
+  "frame_count": 51
+}

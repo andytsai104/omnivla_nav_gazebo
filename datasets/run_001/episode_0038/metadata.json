@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0038",
+  "start_time": "2026-04-20T12:06:21.956618Z",
+  "end_time": "2026-04-20T12:08:22.213125Z",
+  "outcome": "timeout",
+  "goal_id": "inside_small_shelf",
+  "prompt": "in small shelf row",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 5.231,
+    "y": -5.906,
+    "yaw_rad": -3.134
+  },
+  "frame_count": 55
+}

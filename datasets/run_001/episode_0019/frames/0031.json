@@ -1,0 +1,32 @@
+{
+  "frame_idx": 31,
+  "ros_stamp": 1363.9,
+  "wall_time": 1776685298.4133859,
+  "prompt": "in small storage shelves",
+  "goal_id": "inside_small_shelf",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 5.231,
+    "y": -5.906,
+    "yaw_rad": -3.134
+  },
+  "odom": {
+    "position": {
+      "x": 5.233989231419641,
+      "y": -5.968540909589083,
+      "z": 0.0
+    },
+    "orientation_quat": {
+      "x": 0.0016986302239289767,
+      "y": 0.0014335384369901028,
+      "z": -0.7642216161742656,
+      "w": 0.6449499058026951
+    },
+    "yaw_rad": -1.739673019527677,
+    "linear_vel": {
+      "x": 0.0,
+      "y": 0.0
+    },
+    "angular_vel_z": 0.0
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "episode_id": "episode_0040",
+  "start_time": "2026-04-20T12:09:58.116623Z",
+  "end_time": "2026-04-20T12:11:28.319969Z",
+  "outcome": "success",
+  "goal_id": "enter_small_shelf_row",
+  "prompt": "enter small shelf row",
+  "goal_pose": {
+    "frame_id": "map",
+    "x": 3.774,
+    "y": 1.856,
+    "yaw_rad": -1.5940000000000003
+  },
+  "frame_count": 41
+}
