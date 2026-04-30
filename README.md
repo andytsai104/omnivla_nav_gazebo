@@ -77,10 +77,28 @@ Robot Navigation
 
 ### 1. Prerequisites
 
-- Ubuntu 22.04 / 24.04  
+- Ubuntu 24.04  
 - ROS 2 Jazzy  
 - Gazebo Harmonic  
 - Nav2  
+
+or Ubuntu 22.04 + Distrobox setup 
+
+
+#### Environment Setup (optional)
+
+The project environment is managed using Conda. The required dependencies were exported using:
+
+```bash
+conda env export > environment.yml
+```
+
+To recreate the environment:
+
+```bash
+conda env create -f environment.yml
+conda activate <environment_name>
+```
 
 ---
 
@@ -144,23 +162,27 @@ python3 ./omnivla_finetune/export_goal_classifier_jsonl.py \
 ---
 
 ## Model Finetuning
+Unfreezed decoder, film_model, and compress part of the parammeters for our finetuning process. (about 100,000 parameters)
 
 ```bash
 python3 ./omnivla_finetune/train_omnivla_edge_classifier.py \
-  --train-jsonl ./datasets/export_goal_classifier/train.jsonl \
-  --val-jsonl ./datasets/export_goal_classifier/val.jsonl \
+  --train-jsonl ./datasets/goal_classifier_run_002/train.jsonl \ 
+  --val-jsonl ./datasets/goal_classifier_run_002/val.jsonl \
   --checkpoint-path ./omnivla-edge/omnivla-edge.pth \
-  --num-classes 7 \
+  --num-classes 10 \
   --epochs 20 \
   --batch-size 4 \
   --feature-mode actions \
+  --lr 1e-4 \
+  --unfreeze-patterns decoder,film_model,compress \
+  --num-workers 4 \
   --device cuda
 ```
 
 Best validation accuracy achieved:
 
 ```
-val_acc = 0.784
+val_acc = 0.9757
 ```
 
 ---
@@ -188,7 +210,7 @@ val_acc = 0.784
 
 - **Andy Tsai**  
 M.S. Robotics & Autonomous Systems @ ASU  
-andystsai1040@gmail.com  
+andystsai104@gmail.com  
 https://github.com/andytsai104  
 <br>
 
@@ -205,7 +227,7 @@ https://github.com/roy0823
 <br>
 
 - **Kalyani Kasar**  
-M.S. Robotics & Autonomous Systems @ ASU  
+M.S. Robotics & Autonomous Systems @ ASU 
 kkasar@asu.edu  
 https://github.com/kalyaniKasar1  
 
