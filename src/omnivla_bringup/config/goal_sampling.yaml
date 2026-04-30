@@ -6,7 +6,7 @@ sample_goal_node:
     odom_topic: "/bcr_bot/odom"
 
     image_output_dir: "src/omnivla_bringup/images/goal_images"
-    frame_id: "odom"
+    frame_id: "map"
     room: "warehouse"
     enabled: true
 

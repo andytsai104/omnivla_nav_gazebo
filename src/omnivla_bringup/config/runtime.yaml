@@ -9,14 +9,14 @@ inference_node:
     use_sim_time: true
 
     model_type: "omnivla_edge"
-    mode: "goal_id"
+    mode: "prediction"
     device: "cuda"
     checkpoint_path: "./checkpoints/latest.pt"
     inference_rate_hz: 2.0
     confidence_threshold: 0.50
 
     base_model_checkpoint_path: "./omnivla-edge/omnivla-edge.pth"
-    classifier_checkpoint_path: "./omnivla_finetune/checkpoints/omnivla_edge_goal_classifier.pt"
+    classifier_checkpoint_path: "./omnivla_finetune/checkpoints/test2/omnivla_edge_goal_classifier_mapped.pt"
 
     image_topic: "/bcr_bot/stereo_camera/left/image_raw"
     camera_info_topic: "/bcr_bot/stereo_camera/left/camera_info"

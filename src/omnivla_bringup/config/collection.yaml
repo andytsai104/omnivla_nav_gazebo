@@ -38,7 +38,8 @@ episode_manager_node:
 
     reset_timeout_sec: 180.0
     episode_length_sec: 180.0
-    max_episodes: 100
+    max_episodes: 150
+    output_dir: "./datasets/run_002"
     min_start_goal_distance: 1.5
 
     spawn_frame_id: "map"

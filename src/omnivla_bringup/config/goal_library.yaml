@@ -6,7 +6,6 @@
 # - optional goal image path
 # - optional aliases / prompt templates
 
-
 # Example:
 # goals:
 #   - id: internel key for nav2, omnivla model, evaluation node...
@@ -26,7 +25,6 @@
 #     enabled: boolean for whther to enable this label (optional but keep it for larger dataset)
 
 
-# TODO: update inside small shelf's pose and image
 goals:
   - id: trash_can_left
     label: "left trash can"
@@ -128,9 +126,8 @@ goals:
       - "go to the large shelf"
       - "go to the main shelf area"
       - "large warehouse shelves"
-      - "main shelf area"
     room: "warehouse"
-    enabled: true
+    enabled: false
   
   - id: inside_small_shelf
     label: "inside small shelf"
@@ -167,5 +164,105 @@ goals:
       - "entrance to small shelves"
       - "go to the small shelf entrance"
       - "go to the entrance of the small shelf row"
+    room: "warehouse"
+    enabled: true
+
+
+  - id: home_position
+    label: "home position"
+    category: "workspace"
+    frame_id: "map"
+    pose:
+      x: 0.0
+      y: -0.0
+      yaw: 0.0
+    goal_image: "images/goal_images/home_position.png"
+    aliases:
+      - "home position"
+      - "starting point"
+      - "robot start area"
+      - "initial position"
+      - "home base"
+      - "spawn location"
+      - "go home"
+      - "return home"
+      - "go back home"
+      - "navigate to home"
+    room: "warehouse"
+    enabled: true
+
+
+  - id: front_boxing_area
+    label: "front boxing area"
+    category: "workspace"
+    frame_id: "map"
+    pose:
+      x: -0.361
+      y: -7.842
+      yaw: 1.558
+    goal_image: "images/goal_images/front_boxing_area.png"
+    aliases:
+      - "front boxing area"
+      - "front package area"
+      - "front box section"
+      - "front box staging area"
+      - "boxing area near entrance"
+      - "go to the front boxing area"
+      - "navigate to the front package area"
+    room: "warehouse"
+    enabled: true
+
+
+  - id: rear_big_shelf
+    label: "rear big shelf"
+    category: "storage"
+    frame_id: "map"
+    pose:
+      x: -3.7
+      y: 6.2
+      yaw: -1.581
+    goal_image: "images/goal_images/rear_big_shelf.png"
+    aliases:
+      - "rear big shelf"
+      - "rear big shelf area"
+      - "back big shelf"
+      - "back large shelf"
+      - "rear storage shelf"
+      - "rear warehouse shelf"
+      - "big shelf near the trash can"
+      - "back shelf section"
+      - "large shelf in the back"
+      - "rear shelf area"
+      - "go to the rear big shelf"
+      - "navigate to the back large shelf"
+      - "go to the shelf near the trash can"
+      - "move to the rear storage shelf"
+    room: "warehouse"
+    enabled: true
+
+
+  - id: front_big_shelf
+    label: "front big shelf"
+    category: "storage"
+    frame_id: "map"
+    pose:
+      x: -3.817
+      y: -7.019
+      yaw: 1.565
+    goal_image: "images/goal_images/front_big_shelf.png"
+    aliases:
+      - "front big shelf"
+      - "front big shelf area"
+      - "front large shelf"
+      - "front storage shelf"
+      - "front warehouse shelf"
+      - "large shelf near entrance"
+      - "front shelf section"
+      - "big shelf near the front aisle"
+      - "main front shelf"
+      - "go to the front big shelf"
+      - "navigate to the front large shelf"
+      - "move to the front storage shelf"
+      - "go to the shelf near the front aisle"
     room: "warehouse"
     enabled: true
