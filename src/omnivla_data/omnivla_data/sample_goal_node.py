@@ -32,7 +32,7 @@ class SampleGoalNode(Node):
         # Stable defaults: better loaded from YAML
         self.declare_parameter("image_topic", "/bcr_bot/stereo_camera/left/image_raw")
         self.declare_parameter("odom_topic", "/bcr_bot/odom")
-        self.declare_parameter("image_output_dir", "src/omnivla_bringup/assets/goal_images")
+        self.declare_parameter("image_output_dir", "src/omnivla_bringup/images/goal_images")
         self.declare_parameter("frame_id", "odom")
         self.declare_parameter("room", "warehouse")
         self.declare_parameter("enabled", True)
@@ -64,7 +64,7 @@ class SampleGoalNode(Node):
         self.bridge = CvBridge()
         self.latest_image: Optional[Image] = None
         self.latest_odom: Optional[Odometry] = None
-        self.saved_image_relpath = f"assets/goal_images/{self.image_filename}"
+        self.saved_image_relpath = f"images/goal_images/{self.image_filename}"
 
         self.create_subscription(Image, self.image_topic, self.image_callback, 10)
         self.create_subscription(Odometry, self.odom_topic, self.odom_callback, 10)
@@ -124,20 +124,20 @@ class SampleGoalNode(Node):
         alias_lines = "\n".join([f'      - "{a}"' for a in self.aliases])
 
         yaml_block = f"""
-  - id: {self.goal_id}
-    label: "{self.label}"
-    category: "{self.category}"
-    frame_id: "{self.frame_id}"
-    pose:
-      x: {x}
-      y: {y}
-      yaw: {yaw}
-    goal_image: "{self.saved_image_relpath}"
-    aliases:
-{alias_lines}
-    room: "{self.room}"
-    enabled: {str(self.enabled).lower()}
-""".rstrip()
+            - id: {self.goal_id}
+                label: "{self.label}"
+                category: "{self.category}"
+                frame_id: "{self.frame_id}"
+                pose:
+                x: {x}
+                y: {y}
+                yaw: {yaw}
+                goal_image: "{self.saved_image_relpath}"
+                aliases:
+            {alias_lines}
+                room: "{self.room}"
+                enabled: {str(self.enabled).lower()}
+            """.rstrip()
 
         print("\nCopy this into goal_library.yaml under 'goals:'\n")
         print(yaml_block)

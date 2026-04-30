@@ -26,6 +26,7 @@ import math
 import random
 import threading
 import time
+import os
 from pathlib import Path
 
 import yaml
@@ -103,6 +104,7 @@ class EpisodeManagerNode(Node):
         self.declare_parameter('goal_library_path',        'config/goal_library.yaml')
         self.declare_parameter('prompt_template_path',     'config/prompt_templates.yaml')
         self.declare_parameter('prompt_mode',              'aliases')
+        self.declare_parameter('output_dir',               './datasets/run_002')
         self.declare_parameter('random_start',             True)
         self.declare_parameter('random_goal',              True)
         self.declare_parameter('reset_between_episodes',   True)
@@ -118,6 +120,7 @@ class EpisodeManagerNode(Node):
         self.goal_library_path       = self.get_parameter('goal_library_path').value
         self.prompt_template_path    = self.get_parameter('prompt_template_path').value
         self.prompt_mode             = self.get_parameter('prompt_mode').value
+        self.output_dir              = self.get_parameter('output_dir').value
         self.random_start            = self.get_parameter('random_start').value
         self.random_goal             = self.get_parameter('random_goal').value
         self.reset_between_episodes  = self.get_parameter('reset_between_episodes').value
@@ -216,13 +219,40 @@ class EpisodeManagerNode(Node):
         return response
 
     # ── Collection loop ───────────────────────────────────────────────────────
+    def _count_existing_episodes(self) -> int:
+        if not os.path.isdir(self.output_dir):
+            return 0
+
+        return len([
+            d for d in os.listdir(self.output_dir)
+            if d.startswith('episode_')
+            and os.path.isdir(os.path.join(self.output_dir, d))
+        ])
 
     def _collection_loop(self):
         """
         Main loop: completes a full episode each iteration.
         Runs in a background thread.
         """
-        for ep_num in range(1, self.max_episodes + 1):
+        existing_count = self._count_existing_episodes()
+        remaining = max(0, self.max_episodes - existing_count)
+
+        if remaining <= 0:
+            self.get_logger().info(
+                f'Output directory already has {existing_count} episodes. '
+                f'max_episodes={self.max_episodes}, so nothing left to collect.'
+            )
+            with self._collection_lock:
+                self._running = False
+            return
+
+        self.get_logger().info(
+            f'Resuming collection: found {existing_count} existing episodes in {self.output_dir}. '
+            f'Will collect {remaining} more to reach max_episodes={self.max_episodes}.'
+        )
+
+        for local_ep_idx in range(1, remaining + 1):
+            ep_num = existing_count + local_ep_idx
 
             with self._collection_lock:
                 if self._stop_requested:
@@ -333,7 +363,7 @@ class EpisodeManagerNode(Node):
             self.goal_sampler.record_visit(goal['id'])
 
         self.get_logger().info(
-            f'Completed {self.max_episodes} episodes, collection finished'
+            f'Collection finished: total episodes should now be {self.max_episodes}'
         )
         with self._collection_lock:
             self._running = False
