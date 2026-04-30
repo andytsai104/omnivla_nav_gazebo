@@ -18,7 +18,7 @@ CATKIN_IGNORE
 log/
 test/
 
-# datasets/
+datasets/
 omnivla-edge/
 *.pth
 *.pt
