@@ -23,6 +23,7 @@ def generate_launch_description():
             'map': os.path.join(pkg_bcr, 'config', 'bcr_map.yaml'),
             'params_file': os.path.join(pkg_bcr, 'config', 'nav2_params.yaml'),
             'package_path': pkg_bcr,
+            'log_level': 'warn'
         }.items()
     )
 
