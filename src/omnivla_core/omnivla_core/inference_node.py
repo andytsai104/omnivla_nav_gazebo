@@ -8,10 +8,10 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Image
 from std_msgs.msg import String
 
-from goal_library import GoalLibrary
-from image_utils import preprocess_image, ros_image_to_bgr
-from model_client import ModelClient
-from pose_utils import odom_to_xyyaw
+from .goal_library import GoalLibrary
+from .image_utils import preprocess_image, ros_image_to_bgr
+from .model_client import ModelClient
+from .pose_utils import odom_to_xyyaw
 
 
 class InferenceNode(Node):
@@ -22,7 +22,7 @@ class InferenceNode(Node):
         # Parameters
         # ------------------------------------------------------------------
         self.declare_parameter("model_type", "omnivla_edge")
-        self.declare_parameter("mode", "pipeline_check")   # pipeline_check | prediction
+        self.declare_parameter("mode", "prediction")   # pipeline_check | prediction
         self.declare_parameter("device", "cuda")
 
         self.declare_parameter(
@@ -53,6 +53,13 @@ class InferenceNode(Node):
         self.classifier_checkpoint_path = self.get_parameter("classifier_checkpoint_path").value
         self.inference_rate_hz = float(self.get_parameter("inference_rate_hz").value)
         self.confidence_threshold = float(self.get_parameter("confidence_threshold").value)
+        
+
+        # in inference_node.py __init__
+        self._active_goal_id = None
+        self._active_goal_confidence = 0.0
+        self._min_switch_margin = 0.20
+        self._blocked_goal_ids = {"home_position"}
 
         image_topic = self.get_parameter("image_topic").value
         odom_topic = self.get_parameter("odom_topic").value
@@ -158,6 +165,23 @@ class InferenceNode(Node):
 
         if goal_id == self._last_goal_id_sent:
             return
+        
+        # Ignore home_position unless explicitly asked
+        if goal_id in self._blocked_goal_ids and "home" not in self._latest_prompt.lower():
+            # self.get_logger().warn(f"Ignoring accidental goal_id='{goal_id}'")
+            return
+
+        # If we already have a goal, only switch if confidence is clearly higher
+        if self._active_goal_id is not None and goal_id != self._active_goal_id:
+            if confidence < self._active_goal_confidence + self._min_switch_margin:
+                self.get_logger().warn(
+                    f"Ignoring goal switch {self._active_goal_id} -> {goal_id}: "
+                    f"{confidence:.2f} not higher than {self._active_goal_confidence:.2f} + margin"
+                )
+                return
+
+        self._active_goal_id = goal_id
+        self._active_goal_confidence = confidence
 
         msg = String()
         msg.data = goal_id

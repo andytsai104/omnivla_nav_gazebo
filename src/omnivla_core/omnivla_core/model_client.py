@@ -24,8 +24,8 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from goal_library import GoalLibrary
-from models.omnivla_edge_classifier_model import OmniVLAEdgeGoalClassifier
+from .goal_library import GoalLibrary
+from .models.omnivla_edge_classifier_model import OmniVLAEdgeGoalClassifier
 
 
 class ModelClient:
