@@ -10,8 +10,12 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 
+import csv
+import json
+import matplotlib.pyplot as plt
+
 from goal_classifier_dataset import GoalClassifierCollator, GoalClassifierDataset
-from omnivla_finetune.omnivla_edge_classifier_model import OmniVLAEdgeGoalClassifier
+from omnivla_edge_classifier_model import OmniVLAEdgeGoalClassifier
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -22,6 +26,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--num-classes", type=int, required=True)
     p.add_argument("--epochs", type=int, default=20)
     p.add_argument("--batch-size", type=int, default=4)
+    p.add_argument("--num-workers", type=int, default=2)
     p.add_argument("--lr", type=float, default=1e-3)
     p.add_argument("--weight-decay", type=float, default=1e-4)
     p.add_argument("--device", type=str, default="cuda")
@@ -31,7 +36,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--class-weighted-loss", action="store_true")
     p.add_argument("--unfreeze-patterns", type=str, default="transformer,encoder,attention,mha,fusion,goal,obs")
     p.add_argument("--unfreeze-text-encoder", action="store_true")
-    p.add_argument("--save-path", type=str, default="omnivla_finetune/checkpoints/omnivla_edge_goal_classifier.pt")
+    p.add_argument("--save-path", type=str, default="omnivla_finetune/checkpoints/test1/omnivla_edge_goal_classifier.pt")
     return p
 
 
@@ -68,6 +73,53 @@ def evaluate(model: nn.Module, loader: DataLoader, criterion: nn.Module, device:
     return {"loss": total_loss / max(total, 1), "acc": correct / max(total, 1)}
 
 
+def save_training_plots(history: List[Dict[str, float]], out_dir: Path) -> None:
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # Save CSV
+    csv_path = out_dir / "training_history.csv"
+    with csv_path.open("w", newline="") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=["epoch", "train_loss", "train_acc", "val_loss", "val_acc"]
+        )
+        writer.writeheader()
+        writer.writerows(history)
+
+    # Save JSON
+    json_path = out_dir / "training_history.json"
+    with json_path.open("w") as f:
+        json.dump(history, f, indent=2)
+
+    epochs = [h["epoch"] for h in history]
+
+    # Loss plot
+    plt.figure()
+    plt.plot(epochs, [h["train_loss"] for h in history], label="Train Loss")
+    plt.plot(epochs, [h["val_loss"] for h in history], label="Validation Loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training and Validation Loss")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(out_dir / "loss_curve.png", dpi=300)
+    plt.close()
+
+    # Accuracy plot
+    plt.figure()
+    plt.plot(epochs, [h["train_acc"] for h in history], label="Train Accuracy")
+    plt.plot(epochs, [h["val_acc"] for h in history], label="Validation Accuracy")
+    plt.xlabel("Epoch")
+    plt.ylabel("Accuracy")
+    plt.title("Training and Validation Accuracy")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(out_dir / "accuracy_curve.png", dpi=300)
+    plt.close()
+
+
 def main() -> None:
     args = build_parser().parse_args()
     device = torch.device(args.device if args.device == "cpu" or torch.cuda.is_available() else "cpu")
@@ -87,8 +139,8 @@ def main() -> None:
     )
 
     collator = GoalClassifierCollator(pad_token_id=0)
-    train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, collate_fn=collator, num_workers=2)
-    val_loader = DataLoader(val_ds, batch_size=args.batch_size, shuffle=False, collate_fn=collator, num_workers=2)
+    train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, collate_fn=collator, num_workers=args.num_workers)
+    val_loader = DataLoader(val_ds, batch_size=args.batch_size, shuffle=False, collate_fn=collator, num_workers=args.num_workers)
 
     sample_batch = next(iter(train_loader))
     print("Sanity check batch:")
@@ -128,6 +180,10 @@ def main() -> None:
     save_path = Path(args.save_path)
     save_path.parent.mkdir(parents=True, exist_ok=True)
 
+    history = []
+    plot_dir = save_path.parent / "plots"
+
+    # Training loop
     for epoch in range(1, args.epochs + 1):
         model.train()
         total_loss = 0.0
@@ -154,6 +210,14 @@ def main() -> None:
         train_acc = correct / max(total, 1)
         val_metrics = evaluate(model, val_loader, criterion, device)
 
+        history.append({
+            "epoch": epoch,
+            "train_loss": train_loss,
+            "train_acc": train_acc,
+            "val_loss": val_metrics["loss"],
+            "val_acc": val_metrics["acc"],
+        })
+
         print(
             f"Epoch {epoch:03d} | "
             f"train_loss={train_loss:.4f} | train_acc={train_acc:.4f} | "
@@ -177,6 +241,8 @@ def main() -> None:
             print(f"  Saved new best checkpoint to: {save_path}")
 
     print(f"Best val_acc: {best_val_acc:.4f}")
+    save_training_plots(history, plot_dir)
+    print(f"Saved training plots and history to: {plot_dir}")
 
 
 if __name__ == "__main__":
